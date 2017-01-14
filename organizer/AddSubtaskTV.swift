@@ -19,11 +19,18 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         self.dataSource = self
         self.delegate = self
     }
-    
+    public func clearList(){
+        for i in 0 ... newSubtaskArray.count{
+            // loop through deleting all cells to fully clear the table
+        }
+        //newSubtaskArray = [String]()
+        
+        reloadData()
+    }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell : SubtaskTVCell
-        cell = self.dequeueReusableCell(withIdentifier: "subtaskCell", for: indexPath) as! SubtaskTVCell
+        var cell : AddSubtaskTVCell
+        cell = self.dequeueReusableCell(withIdentifier: "subtaskCell", for: indexPath) as! AddSubtaskTVCell
         if(cell.subtaskTitleField.text!.characters.count != 0){
             cell.subtaskTitleField.placeholder = newSubtaskArray[indexPath.row]
         }
@@ -51,8 +58,8 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
      */
     func checkButtonClicked(sender:UIButton) {
         let buttonRow = sender.tag
-        let cellhandle : SubtaskTVCell =
-            self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! SubtaskTVCell
+        let cellhandle : AddSubtaskTVCell =
+            self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! AddSubtaskTVCell
         //checks textfield to see if it has text before adding it to the sub task list
         if(newSubtaskArray.count <= 6 && (cellhandle.subtaskTitleField.text?.characters.count)! > 0){
             //if the chosen button is either a current element or a new value

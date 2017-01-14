@@ -11,10 +11,10 @@ import UIKit
 class ListVC: UIViewController{
     var newSubtaskArray = [String]()
     
-    @IBOutlet weak var mainTV: MainTableView!
+    @IBOutlet weak var mainTV: TaskTV!
     @IBOutlet weak var addTaskView: UIView!
     @IBOutlet weak var taskTitleField: UITextField!
-    @IBOutlet weak var addSubtaskTableView: UITableView!
+    @IBOutlet weak var addSubtaskTableView: AddSubtaskTV!
     let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
     var blurEffectView: UIVisualEffectView?
     var isNotEmpty: Bool = true
@@ -43,9 +43,18 @@ class ListVC: UIViewController{
 
     }
     @IBAction func addToList(_ sender: UIButton) {
-        if((taskTitleField.text?.characters.count)! > 0 && newSubtaskArray.count == 0 && !isDateEnabled){
-            let newTask = Task("All",(taskTitleField.text)!)
-            mainTV.taskList.append(newTask)
+        if((taskTitleField.text?.characters.count)! > 0 && newSubtaskArray.count == 0){
+            newSubtaskArray = addSubtaskTableView.newSubtaskArray
+            if(!isDateEnabled && newSubtaskArray.count == 0){
+                let newTask = Task("All",(taskTitleField.text)!)
+                mainTV.taskList.append(newTask)
+                
+            }
+            
+            else if(newSubtaskArray.count != 0 && !isDateEnabled){
+                let newTask = Task("All",(taskTitleField.text)!, newSubtaskArray)
+                mainTV.taskList.append(newTask)
+            }
             mainTV.reloadData()
             closeAddTask()
             self.view.endEditing(true)
@@ -62,18 +71,19 @@ class ListVC: UIViewController{
         isDateEnabled = false;
         addTaskView.isHidden = true;
         blurEffectView?.removeFromSuperview()
+        self.view.endEditing(true)
     }
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mainTV.separatorStyle = .none
         // Do any additional setup after loading the view, typically from a nib.
         addTaskView.isHidden = true
         //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        //let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ListVC.dismissKeyboard))
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
         //tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
+        //view.addGestureRecognizer(tap)
 
     }
     //Calls this function when the tap is recognized.

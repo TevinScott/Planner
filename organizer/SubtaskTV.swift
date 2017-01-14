@@ -8,33 +8,27 @@
 
 import Foundation
 import UIKit
-class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
-    var taskList : [Task] = [Task]()
+class SubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
+    var subtaskList: [String] = ["test"]
+    var hasSubtasks: Bool = false;
     //intializer
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.isScrollEnabled = false
         self.dataSource = self
         self.delegate = self
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        var cell : TaskTVCell
-        cell = self.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTVCell
-        
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
-        cell.taskTitle.text = taskList[indexPath.row].title
-        //cell.titleOnly()
-        //cell.addSTButton.tag = indexPath.row
-        //cell.addSTButton.addTarget(self, action: #selector(self.checkButtonClicked(sender:)), for: UIControlEvents.touchUpInside)
+        var cell : SubtaskTVCell
+        cell = self.dequeueReusableCell(withIdentifier: "subtaskCell", for: indexPath) as! SubtaskTVCell
+        cell.subtaskField.text = subtaskList[indexPath.row]
         return cell
     }
     
     @available(iOS 2.0, *)
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return taskList.count
-        
-        
+        return subtaskList.count
     }
     /*
      *controls the set of buttons in the subtask table
@@ -43,9 +37,7 @@ class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
      */
     func checkButtonClicked(sender:UIButton) {
         //let buttonRow = sender.tag
-        //let cellhandle : CustomTableViewCell =
-            //self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! CustomTableViewCell
-       
+        //let cellhandle : AddSubtaskTVCell =
+          //  self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! AddSubtaskTVCell
     }
 }
-

@@ -12,7 +12,7 @@ class Task {
     var title: String? = nil
     var alertDate: NSDate? = nil
     var subtasks: [String]? = nil
-    
+    var hasSubtask: Bool = false
     init(_ _category: String, _ _title: String){
         category = _category
         title = _title
@@ -23,11 +23,18 @@ class Task {
         alertDate = _alertDate
         
     }
+    init(_ _category: String, _ _title: String, _ _subtasks: [String]){
+        category = _category
+        title = _title
+        subtasks = _subtasks
+        hasSubtask = true
+    }
     init(_ _category: String, _ _title: String, _ _alertDate: NSDate,_ _subtasks: [String]){
         category = _category
         title = _title
         alertDate = _alertDate
         subtasks = _subtasks
+        hasSubtask = true
         
     }
 }

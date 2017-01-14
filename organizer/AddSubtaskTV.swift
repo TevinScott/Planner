@@ -19,7 +19,14 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         self.dataSource = self
         self.delegate = self
     }
-    
+    public func clearList(){
+        for i in 0 ... newSubtaskArray.count{
+            // loop through deleting all cells to fully clear the table
+        }
+        //newSubtaskArray = [String]()
+        
+        reloadData()
+    }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         var cell : AddSubtaskTVCell

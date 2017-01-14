@@ -13,6 +13,7 @@ class Task {
     var alertDate: NSDate? = nil
     var subtasks: [String]? = nil
     var hasSubtask: Bool = false
+    var isExpanded: Bool = false
     init(_ _category: String, _ _title: String){
         category = _category
         title = _title

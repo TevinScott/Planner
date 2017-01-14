@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
     var taskList : [Task] = [Task]()
+
     var selectedCellIndexPath: NSIndexPath?
     let selectedCellHeight: CGFloat = 291.0
     let unselectedCellHeight: CGFloat = 67.0
@@ -27,7 +28,7 @@ class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         cell = self.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTVCell
         cell.isUserInteractionEnabled = true
         cell.taskObj = taskList[indexPath.row]
-        if(taskList[indexPath.row].hasSubtask){
+        if(taskList[indexPath.row].subtasks != nil && taskList[indexPath.row].hasSubtask){
             cell.subtaskTableView.subtaskList = taskList[indexPath.row].subtasks!
         }
         cell.setCellElements()
@@ -39,28 +40,25 @@ class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if selectedCellIndexPath != nil && selectedCellIndexPath == indexPath as NSIndexPath {
-            selectedCellIndexPath = nil
-        } else {
-            selectedCellIndexPath = indexPath as NSIndexPath?
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if taskList[indexPath.row].hasSubtask{
+            if(taskList[indexPath.row].isExpanded){
+                return selectedCellHeight
+            }
         }
-        
-        tableView.beginUpdates()
-        tableView.endUpdates()
-        
-        if selectedCellIndexPath != nil {
-            // This ensures, that the cell is fully visible once expanded
-            tableView.scrollToRow(at: indexPath as IndexPath, at: .none, animated: true)
-        }
+        return unselectedCellHeight
+
     }
+    
     @available(iOS 2.0, *)
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return taskList.count
     }
-    func evalTaskContents(_ task: Task){
-        
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            taskList.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+        }
     }
     /*
      *controls the set of buttons in the subtask table
@@ -68,18 +66,22 @@ class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
      *otherwise removes the 
      */
     func viewSubtaskButtonClicked(sender:UIButton) {
+        print("tapped")
         let buttonRow = sender.tag
         let cellhandle : TaskTVCell =
         self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! TaskTVCell
-        if(!cellhandle.isExpanded && cellhandle.hasSubtasks){
-            cellHeight = selectedCellHeight
-            cellhandle.isExpanded = true
+
+        if(!taskList[buttonRow].isExpanded && cellhandle.hasSubtasks){
+            //cellHeight = selectedCellHeight
+            taskList[buttonRow].isExpanded = true
         }
-        else if (cellhandle.isExpanded && cellhandle.hasSubtasks){
-            cellHeight = unselectedCellHeight
-            cellhandle.isExpanded = false
+        else if (taskList[buttonRow].isExpanded && cellhandle.hasSubtasks){
+            //cellHeight = unselectedCellHeight
+            taskList[buttonRow].isExpanded = false
         }
-        cellhandle.frame.size.height = cellHeight
+        self.beginUpdates()
+        self.endUpdates()
+        self.scrollToRow(at: IndexPath(row: buttonRow, section: 0), at: .none, animated: true)
         //self.reloadRows(at: [IndexPath(row: buttonRow, section: 0)], with: UITableViewRowAnimation.fade)
     }
 }

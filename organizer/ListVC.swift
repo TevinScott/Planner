@@ -48,6 +48,7 @@ class ListVC: UIViewController{
             if(!isDateEnabled && newSubtaskArray.count == 0){
                 let newTask = Task("All",(taskTitleField.text)!)
                 mainTV.taskList.append(newTask)
+                addSubtaskTableView.clearList()
                 
             }
             
@@ -68,10 +69,11 @@ class ListVC: UIViewController{
     func closeAddTask(){
         taskTitleField.text? = ""
         newSubtaskArray = [String]()
-        isDateEnabled = false;
+        addSubtaskTableView.clearList()
         addTaskView.isHidden = true;
         blurEffectView?.removeFromSuperview()
         self.view.endEditing(true)
+        
     }
     
     override func viewDidLoad() {
@@ -80,10 +82,10 @@ class ListVC: UIViewController{
         // Do any additional setup after loading the view, typically from a nib.
         addTaskView.isHidden = true
         //Looks for single or multiple taps.
-        //let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ListVC.dismissKeyboard))
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ListVC.dismissKeyboard))
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-        //tap.cancelsTouchesInView = false
-        //view.addGestureRecognizer(tap)
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
 
     }
     //Calls this function when the tap is recognized.

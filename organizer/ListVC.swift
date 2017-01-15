@@ -42,6 +42,7 @@ class ListVC: UIViewController{
         }
 
     }
+    
     @IBAction func addToList(_ sender: UIButton) {
         if((taskTitleField.text?.characters.count)! > 0 && newSubtaskArray.count == 0){
             newSubtaskArray = addSubtaskTableView.newSubtaskArray
@@ -64,6 +65,11 @@ class ListVC: UIViewController{
     }
     @IBAction func closeAddTaskView(_ sender: UIButton) {
         closeAddTask()
+    }
+    
+    @IBAction func backToCategories(_ sender: Any) {
+        _ = self.navigationController?.popToRootViewController(animated: true)
+        print("tapped back")
     }
     
     func closeAddTask(){

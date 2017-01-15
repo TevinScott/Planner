@@ -20,28 +20,27 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         self.delegate = self
     }
     public func clearList(){
-        for i in 0 ... newSubtaskArray.count{
-            // loop through deleting all cells to fully clear the table
-        }
-        //newSubtaskArray = [String]()
-        
+        newSubtaskArray = [String]()
         reloadData()
     }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         var cell : AddSubtaskTVCell
         cell = self.dequeueReusableCell(withIdentifier: "subtaskCell", for: indexPath) as! AddSubtaskTVCell
-        if(cell.subtaskTitleField.text!.characters.count != 0){
-            cell.subtaskTitleField.placeholder = newSubtaskArray[indexPath.row]
+        
+        //this if block is used for the initial adding of the first subtask
+        //without it the 2nd task created will have the contents of the previous task's subtasks
+        if(indexPath.row == tableView.numberOfRows(inSection: 0) - 1 || newSubtaskArray.count == 0){
+            cell.subtaskTitleField.text = ""
+            cell.subtaskTitleField.placeholder = "(Optional) add subtask description lol"
+            cell.addSTButton.setImage(UIImage(named:"light check"), for: .normal)
+            cell.addedToList = false;
+            print("last row \(self.numberOfRows(inSection: 0))")
+            cell.subtaskTitleField.isUserInteractionEnabled = true
         }
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         cell.addSTButton.tag = indexPath.row
         cell.addSTButton.addTarget(self, action: #selector(self.checkButtonClicked(sender:)), for: UIControlEvents.touchUpInside)
-        /* here to stop the extra subview cell being added
-        if(indexPath.row > 5){
-            self.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-        }
-         */
         return cell
     }
     

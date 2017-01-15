@@ -75,6 +75,11 @@ class TaskTVCell: UITableViewCell{
         taskTitle.text = taskObj?.title
         
     }
+    func allSubtasksCompleted(){
+        taskObj?.subtasks = nil
+        hasSubtasks = false;
+        setCellElements()
+    }
     private func titleAndSubtasks(){
         if(viewAlert != nil){
             viewAlert.removeFromSuperview()

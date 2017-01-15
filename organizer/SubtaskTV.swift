@@ -17,15 +17,26 @@ class SubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         self.isScrollEnabled = false
         self.dataSource = self
         self.delegate = self
+        
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell : SubtaskTVCell
         cell = self.dequeueReusableCell(withIdentifier: "subtaskCell", for: indexPath) as! SubtaskTVCell
         cell.subtaskField.text = subtaskList[indexPath.row]
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
         return cell
     }
-    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            subtaskList.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+            if(subtaskList.count == 0){
+                hasSubtasks = false
+            }
+            
+        }
+    }
     @available(iOS 2.0, *)
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return subtaskList.count
@@ -37,7 +48,7 @@ class SubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
      */
     func checkButtonClicked(sender:UIButton) {
         //let buttonRow = sender.tag
-        //let cellhandle : AddSubtaskTVCell =
-          //  self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! AddSubtaskTVCell
+        //let cellhandle : SubtaskTVCell =
+          //  self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! SubtaskTVCell
     }
 }

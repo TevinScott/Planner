@@ -36,6 +36,5 @@ class Task {
         alertDate = _alertDate
         subtasks = _subtasks
         hasSubtask = true
-        
     }
 }

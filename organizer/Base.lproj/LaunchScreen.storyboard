@@ -25,10 +25,10 @@
                                 <rect key="frame" x="53" y="276" width="269" height="77"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="99"/>
-                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.84352350234985352" green="0.35404238104820251" blue="0.29000246524810791" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="addTaskIcon" translatesAutoresizingMaskIntoConstraints="NO" id="2KE-Mt-dl8">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="finishAdd" translatesAutoresizingMaskIntoConstraints="NO" id="2KE-Mt-dl8">
                                 <rect key="frame" x="141" y="295" width="55" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -42,6 +42,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="addTaskIcon" width="512" height="512"/>
+        <image name="finishAdd" width="128" height="128"/>
     </resources>
 </document>

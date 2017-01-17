@@ -7,18 +7,79 @@
 //
 
 import UIKit
-
-class ListVC: UIViewController{
+import FSCalendar
+import CoreData
+class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
     var newSubtaskArray = [String]()
-    
     @IBOutlet weak var mainTV: TaskTV!
     @IBOutlet weak var addTaskView: UIView!
     @IBOutlet weak var taskTitleField: UITextField!
     @IBOutlet weak var addSubtaskTableView: AddSubtaskTV!
+    @IBOutlet weak var addReminder: UIButton!
+    @IBOutlet weak var cancelAddReminderButton: UIButton!
+    @IBOutlet weak var completeAddReminderButton: UIButton!
+    
+    @IBOutlet weak var Scheduler: UIView!
+    @IBOutlet weak var timePicker: UIDatePicker!
+    
     let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
     var blurEffectView: UIVisualEffectView?
     var isNotEmpty: Bool = true
     var isDateEnabled = false;
+    
+    @IBAction func cancelAddReminder(_ sender: UIButton) {
+        Scheduler.isHidden = true
+        self.view.sendSubview(toBack: Scheduler)
+    }
+    @IBAction func completeAddReminder(_ sender: UIButton) {
+        Scheduler.isHidden = true
+        self.view.sendSubview(toBack: Scheduler)
+    }
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        mainTV.separatorStyle = .none
+        // Do any additional setup after loading the view, typically from a nib.
+        addTaskView.isHidden = true
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ListVC.dismissKeyboard))
+        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
+        tap.cancelsTouchesInView = false
+        Scheduler.isHidden = true
+        roundButtonCorners()
+        view.addGestureRecognizer(tap)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let newTaskData = NSEntityDescription.insertNewObject(forEntityName: "TaskCoreData", into: context)
+        
+        newTaskData.setValue("All", forKey: "category")
+        newTaskData.setValue(0, forKey: "hasSubtasks")
+        newTaskData.setValue(0, forKey: "isExpanded")
+        newTaskData.setValue("hello Database", forKey: "title")
+        
+        do{
+            try context.save()
+            print("saved")
+        }
+        catch{
+            
+        }
+        
+    }
+    func seedTaskData(){
+        
+    }
+
+    @IBAction func addReminder(_ sender: UIButton) {
+        Scheduler.isHidden = false
+
+        self.view.bringSubview(toFront: Scheduler)
+        Scheduler.clipsToBounds = true // must be set to true to allow rounded corners
+        Scheduler.layer.cornerRadius = 12
+        print("tapped")
+    }
     
     @IBAction func addTask(_ sender: UIButton) {
         /*
@@ -81,20 +142,12 @@ class ListVC: UIViewController{
         self.view.endEditing(true)
         
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        mainTV.separatorStyle = .none
-        // Do any additional setup after loading the view, typically from a nib.
-        addTaskView.isHidden = true
-        //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ListVC.dismissKeyboard))
-        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-
+    func roundButtonCorners(){
+        cancelAddReminderButton.layer.cornerRadius = 6
+        
+        completeAddReminderButton.layer.cornerRadius = 6
     }
-    //Calls this function when the tap is recognized.
+        //Calls this function when the tap is recognized.
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)

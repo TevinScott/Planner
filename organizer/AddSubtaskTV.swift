@@ -35,7 +35,7 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
             cell.subtaskTitleField.placeholder = "(Optional) add subtask description lol"
             cell.addSTButton.setImage(UIImage(named:"light check"), for: .normal)
             cell.addedToList = false;
-            print("last row \(self.numberOfRows(inSection: 0))")
+            
             cell.subtaskTitleField.isUserInteractionEnabled = true
         }
         cell.selectionStyle = UITableViewCellSelectionStyle.none
@@ -68,7 +68,6 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
                 cellhandle.addedToList = true
                 cellhandle.addSTButton.setImage(UIImage(named: "removeSubtaskIcon"), for: .normal)
                 newSubtaskArray.append( cellhandle.subtaskTitleField.text!)
-                print(newSubtaskArray)
             }
             //existing element conition
             else if(cellhandle.addedToList){
@@ -81,7 +80,6 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
                 
             }
             self.reloadData()
-            print("subtask array size \(newSubtaskArray.count)")
         }
     }
 }

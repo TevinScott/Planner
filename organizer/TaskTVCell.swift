@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 class TaskTVCell: UITableViewCell{
-    var taskObj : Task?
+    var taskObj : TaskCoreData?
     var hasAlert: Bool = false;
     var hasSubtasks: Bool = false;
     var isExpanded: Bool = false;
@@ -22,33 +22,35 @@ class TaskTVCell: UITableViewCell{
     
     //default cell height = 67
     override func awakeFromNib() {
-        super.awakeFromNib()
-        self.isUserInteractionEnabled = true
-        self.selectionStyle = .none
+        super.awakeFromNib();
+        self.isUserInteractionEnabled = true;
+        self.selectionStyle = .none;
     }
     
     public func setCellElements(){
-        if(taskObj?.subtasks == nil && taskObj?.alertDate == nil){
+        if(!(taskObj?.hasSubtasks)! && taskObj?.alertDate == nil){
             titleOnly()
-            print("title only")
         }
-        else if(taskObj?.alertDate != nil && taskObj?.subtasks == nil ){
+        else if(taskObj?.alertDate != nil && taskObj?.hasSubtasks == false ){
             titleAndAlert()
-            print("title and alert")
         }
-        else if(taskObj?.subtasks != nil && taskObj?.alertDate == nil ){
+        else if((taskObj?.hasSubtasks)! && taskObj?.alertDate == nil ){
             titleAndSubtasks()
-            print("title and subtasks")
         }
+        else if((taskObj?.hasSubtasks)! && taskObj?.alertDate != nil){
+            
+            
+        }
+
     }
     private func titleOnly(){
-        if(viewAlert != nil){
+            taskTitle.text = "";
             //remove unecessary elements
-            viewAlert.removeFromSuperview()
-            viewAlertIcon.removeFromSuperview()
-            viewSubtask.removeFromSuperview()
-            viewSubtaskIcon.removeFromSuperview()
-            subtaskTableView.removeFromSuperview()
+        if(viewAlert != nil){ viewAlert.removeFromSuperview(); }
+        if(viewAlertIcon != nil){ viewAlertIcon.removeFromSuperview(); }
+        if(viewSubtask != nil) { viewSubtask.removeFromSuperview(); }
+        if(viewSubtaskIcon != nil) {viewSubtaskIcon.removeFromSuperview(); }
+        if(subtaskTableView != nil) {subtaskTableView.removeFromSuperview(); }
             //end of removal
             //resizing
             var frameRect = taskTitle.frame;
@@ -59,7 +61,7 @@ class TaskTVCell: UITableViewCell{
             //end of resizing
             //set element values
             taskTitle.text = taskObj?.title
-        }
+        
     }
     private func titleAndAlert(){
         //remove unecessary elements
@@ -76,7 +78,7 @@ class TaskTVCell: UITableViewCell{
         
     }
     func allSubtasksCompleted(){
-        taskObj?.subtasks = nil
+        //taskObj?.subtaskList = nil
         hasSubtasks = false;
         setCellElements()
     }
@@ -86,7 +88,7 @@ class TaskTVCell: UITableViewCell{
             viewAlertIcon.removeFromSuperview()
         }
         hasSubtasks = true
-        subtaskTableView.subtaskList = (taskObj?.subtasks)!
+        //subtaskTableView.subtaskList = (taskObj?.subtaskList)! as! [String]
         //resizing
         var frameRect = taskTitle.frame;
         frameRect.size.width = 300; // <-- Specify the width you want here.
@@ -97,4 +99,6 @@ class TaskTVCell: UITableViewCell{
         taskTitle.text = taskObj?.title
 
     }
+    
+
 }

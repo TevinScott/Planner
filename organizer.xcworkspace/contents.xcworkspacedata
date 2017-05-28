@@ -2,10 +2,13 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:TaskCoreData+CoreDataClass.swift">
+      location = "group:organizer/SubTaskCoreData+CoreDataClass.swift">
    </FileRef>
    <FileRef
-      location = "group:TaskCoreData+CoreDataProperties.swift">
+      location = "group:organizer/SubTaskCoreData+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:organizer/TaskCoreData+CoreDataProperties.swift">
    </FileRef>
    <FileRef
       location = "group:organizer.xcodeproj">

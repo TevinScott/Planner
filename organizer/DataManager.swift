@@ -12,42 +12,58 @@ import UIKit
 class DataManager {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var context: NSManagedObjectContext
-    var newTaskData: NSManagedObject?
-    var counterVal : Int32?
-    var newCounterVal: NSManagedObject?
+
     init() {
         context = appDelegate.persistentContainer.viewContext
-        _ = self.getData();
-        
     }
     func giveContext() -> NSManagedObjectContext{
         return context;
     }
     func getData() -> [TaskCoreData]{
-        let taskListRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"TaskCoreData")
-        taskListRequest.returnsObjectsAsFaults = false
         var storedTasks: [TaskCoreData] = [];
-       
+        var rawArray: [TaskCoreData] = [];
+        let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskCoreData")
         do{
-             storedTasks = try context.fetch(TaskCoreData.fetchRequest())
+            rawArray = try context.fetch(taskFetch) as! [TaskCoreData]
         }catch {}
+        for task in rawArray {
+            if(task.title != nil){
+                storedTasks.append(task)
+            }
+        }
+        
         return storedTasks;
     }
+    /**
     
-    func saveData(standardTask: TaskCoreData, subtaskList: [String]){
+    */
+    func saveData(standardTask: TaskCoreData, subtaskList: [SubTaskCoreData]){
         if(subtaskList.count > 0){
-            for subTitle in subtaskList {
-                let subTaskCD = NSEntityDescription.insertNewObject(forEntityName: "SubTaskCoreData", into: context) as! SubTaskCoreData
-                subTaskCD.subTitle = subTitle;
-                subTaskCD.parentTask = standardTask;
+            for subTaskElement in subtaskList {
+                subTaskElement.parentTask = standardTask;
             }
         }
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         
     }
-    func getSubTasks(parentTask: TaskCoreData) -> [String] {
-        var subtaskList = [String]();
-        // loop through getting tasks associated with the parent task
+    func saveData(){
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+    }
+    /**
+    
+     */
+    func getSubTasks(parentTask: TaskCoreData) -> [SubTaskCoreData] {
+        var subtaskList = [SubTaskCoreData]();
+        let subtaskPredicate = NSPredicate(format: "parentTask == %@", parentTask)//*must use the name of the attribute* *the more you know :D*
+        let fetchSubtasks = NSFetchRequest<NSFetchRequestResult>(entityName: "SubTaskCoreData");
+        fetchSubtasks.predicate = subtaskPredicate
+        do {
+             subtaskList = try context.fetch(fetchSubtasks) as! [SubTaskCoreData];
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+        //print("total amount of children subtasks \(subtaskList.count)")
+
         return subtaskList;
     }
     func deleteSubTask(subtask: SubTaskCoreData){
@@ -56,31 +72,27 @@ class DataManager {
     }
     func deleteTask(taskToBeDeleted: TaskCoreData){
         context.delete(taskToBeDeleted)
-        print("task being deleted: \(taskToBeDeleted.title)")
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
     }
 
     
     func DeleteAll(){
         // Initialize Fetch Request
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskCoreData")
-        
+        let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskCoreData")
+        let subtaskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SubTaskCoreData")
         // Configure Fetch Request
-        fetchRequest.includesPropertyValues = false
-        
+        taskFetch.includesPropertyValues = false
+        subtaskFetch.includesPropertyValues = false
         do {
-            let items = try context.fetch(fetchRequest) as! [NSManagedObject]
+            let items = try context.fetch(taskFetch) as! [NSManagedObject]
             
             for item in items {
                 context.delete(item)
             }
-            
             // Save Changes
             try context.save()
-            
         } catch {
-            // Error Handling
-            // ...
+
         }
     }
 }

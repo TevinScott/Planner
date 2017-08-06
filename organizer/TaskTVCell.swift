@@ -26,7 +26,19 @@ class TaskTVCell: UITableViewCell{
         self.isUserInteractionEnabled = true;
         self.selectionStyle = .none;
     }
-    
+    func setAll(){
+        hasSubtasks = true
+        //subtaskTableView.subtaskList = (taskObj?.subtaskList)! as! [String]
+        //resizing
+        var frameRect = taskTitle.frame;
+        frameRect.size.width = 300; // <-- Specify the width you want here.
+        taskTitle.frame = frameRect;
+        //end of resizing
+        //set element values
+        taskTitle.text = taskObj?.title
+        viewAlertIcon.image = UIImage(named:"alertIconSet")
+        
+    }
     public func setCellElements(){
         if(!(taskObj?.hasSubtasks)! && taskObj?.alertDate == nil){
             titleOnly()
@@ -38,8 +50,7 @@ class TaskTVCell: UITableViewCell{
             titleAndSubtasks()
         }
         else if((taskObj?.hasSubtasks)! && taskObj?.alertDate != nil){
-            
-            
+            setAll();
         }
 
     }
@@ -82,6 +93,7 @@ class TaskTVCell: UITableViewCell{
         hasSubtasks = false;
         setCellElements()
     }
+    
     private func titleAndSubtasks(){
         if(viewAlert != nil){
             viewAlert.removeFromSuperview()

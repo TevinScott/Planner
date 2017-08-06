@@ -8,9 +8,12 @@
 
 import Foundation
 import UIKit
+
 class SubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
-    var subtaskList: [String] = ["test"]
+    var parentTask: TaskCoreData?
+    var subtaskList = [SubTaskCoreData]();
     var hasSubtasks: Bool = false;
+    let DATAMANGER = DataManager.init()
     //intializer
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,17 +26,21 @@ class SubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell : SubtaskTVCell
         cell = self.dequeueReusableCell(withIdentifier: "subtaskCell", for: indexPath) as! SubtaskTVCell
-        cell.subtaskField.text = subtaskList[indexPath.row]
+        cell.subtaskField.text = subtaskList[indexPath.row].subTitle
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         return cell
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            subtaskList.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+            
             if(subtaskList.count == 0){
+                parentTask?.hasSubtasks = false;
                 hasSubtasks = false
             }
+            DATAMANGER.deleteSubTask(subtask: subtaskList[indexPath.row])
+            subtaskList = DATAMANGER.getSubTasks(parentTask: parentTask!)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+            
             
         }
     }

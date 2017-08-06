@@ -23,22 +23,20 @@ class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
     }
    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         var cell : TaskTVCell;
         cell = self.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTVCell;
         cell.isUserInteractionEnabled = true;
         cell.taskObj = taskList[indexPath.row];
-        print(cell.taskTitle.text!)
-        print(cell.taskObj?.title)
-        print(cell.taskObj?.hasSubtasks)
-        /*if(taskList[indexPath.row].subtaskList != nil && taskList[indexPath.row].hasSubtasks){
-            cell.subtaskTableView.subtaskList = taskList[indexPath.row].subtaskList! as! [String];
-        }*/
+        //print("total amount of cells \(indexPath.count)")
+        //print("total amount of array objects \(taskList.count)")
+        if(cell.taskObj?.hasSubtasks)!{
+            cell.subtaskTableView.parentTask = cell.taskObj;
+            cell.subtaskTableView.subtaskList = Array(cell.taskObj!.subtasks!) as! [SubTaskCoreData]
+        }
         if(cell.taskObj?.hasSubtasks)!{
             cell.viewSubtask.tag = indexPath.row;
             cell.viewSubtask.addTarget(self, action: #selector(self.viewSubtaskButtonClicked(sender:)), for: UIControlEvents.touchUpInside);
         }
-        
         cell.setCellElements();
         return cell;
     }
@@ -62,9 +60,10 @@ class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            
             let taskTBD = taskList[indexPath.row]
             DATAMANAGER.deleteTask(taskToBeDeleted: taskTBD);
-            self.taskList.remove(at:indexPath.row)
+            taskList = DATAMANAGER.getData();
             tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic);
         }
     }

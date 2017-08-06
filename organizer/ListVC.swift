@@ -11,7 +11,7 @@ import FSCalendar
 import CoreData
 class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
    
-    var newSubtaskArray = [String]();
+    var newSubtaskArray = [SubTaskCoreData]();
     @IBOutlet weak var mainTV: TaskTV!;
     @IBOutlet weak var addTaskView: UIView!;
     @IBOutlet weak var taskTitleField: UITextField!
@@ -19,16 +19,16 @@ class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
     @IBOutlet weak var addReminder: UIButton!;
     @IBOutlet weak var cancelAddReminderButton: UIButton!;
     @IBOutlet weak var completeAddReminderButton: UIButton!;
-    
     @IBOutlet weak var Scheduler: UIView!;
     @IBOutlet weak var timePicker: UIDatePicker!;
-    
+    @IBOutlet weak var calender: FSCalendar!
+    var newTempTask: TaskCoreData? = nil;
     let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark);
     var blurEffectView: UIVisualEffectView?;
     var isNotEmpty: Bool = true;
-    var isDateEnabled = false;
+    var isReminderSet = false;
     let DATAMANAGER = DataManager.init();
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -50,6 +50,7 @@ class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
     }
 
     @IBAction func cancelAddReminder(_ sender: UIButton) {
+        
         Scheduler.isHidden = true
         self.view.sendSubview(toBack: Scheduler)
     }
@@ -60,7 +61,7 @@ class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
     
     @IBAction func addReminder(_ sender: UIButton) {
         Scheduler.isHidden = false;
-
+        isReminderSet = true;
         self.view.bringSubview(toFront: Scheduler);
         Scheduler.clipsToBounds = true; // must be set to true to allow rounded corners
         Scheduler.layer.cornerRadius = 12;
@@ -74,7 +75,7 @@ class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
             //always fill the view
             blurEffectView?.frame = self.view.bounds;
             blurEffectView?.autoresizingMask = [.flexibleWidth, .flexibleHeight];
-            
+            newTempTask = NSEntityDescription.insertNewObject(forEntityName: "TaskCoreData", into: DATAMANAGER.context) as? TaskCoreData
             self.view.addSubview(blurEffectView!) //if you have more UIViews, use an insertSubview API to place it
             addTaskView.layer.cornerRadius = 12;
             addTaskView.isHidden = false;
@@ -86,18 +87,21 @@ class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
     @IBAction func addToList(_ sender: UIButton) {
         if((taskTitleField.text?.characters.count)! > 0){
             newSubtaskArray = addSubtaskTableView.newSubtaskArray;
-            let newTask = NSEntityDescription.insertNewObject(forEntityName: "TaskCoreData", into: DATAMANAGER.context) as! TaskCoreData
-            newTask.category = "All";
-            newTask.title = taskTitleField.text;
-    
-            if(isDateEnabled){
+            
+            addSubtaskTableView.parentTask = newTempTask;
+            newTempTask?.category = "All";
+            newTempTask?.title = taskTitleField.text;
+            if(isReminderSet){
                 //newTask.alertDate = need to get date/time values from FSCalender(date only) and UIDatepicker(time only)
+                newTempTask?.alertDate = calender.selectedDate as NSDate
             }
-            if(newSubtaskArray.count != 0){
-                //need to save this array
+            if(newSubtaskArray.count > 0){
+                newTempTask?.hasSubtasks = true;
             }
-            DATAMANAGER.saveData(standardTask: newTask, subtaskList: newSubtaskArray);
-            mainTV.taskList.append(newTask);
+            DATAMANAGER.saveData(standardTask: newTempTask!, subtaskList: newSubtaskArray);
+            newTempTask = nil;
+            isReminderSet = false;
+            mainTV.taskList = DATAMANAGER.getData();
             addSubtaskTableView.clearList();
             mainTV.reloadData();
             closeAddTask();
@@ -107,6 +111,8 @@ class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
     }
     
     @IBAction func closeAddTaskView(_ sender: UIButton) {
+        DATAMANAGER.context.delete(newTempTask!);
+        DATAMANAGER.DeleteAll();
         closeAddTask();
     }
     
@@ -117,7 +123,8 @@ class ListVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource{
     
     func closeAddTask(){
         taskTitleField.text? = "";
-        newSubtaskArray = [String]();
+        newSubtaskArray = [SubTaskCoreData]();
+        newTempTask = nil;
         addSubtaskTableView.clearList();
         addTaskView.isHidden = true;
         blurEffectView?.removeFromSuperview();

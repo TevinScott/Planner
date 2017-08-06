@@ -2,7 +2,7 @@
 //  SubTaskCoreData+CoreDataProperties.swift
 //  
 //
-//  Created by Tevin Scott on 5/27/17.
+//  Created by Tevin Scott on 5/28/17.
 //
 //
 

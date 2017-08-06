@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -153,7 +153,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="349" height="64.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="alterIcon" translatesAutoresizingMaskIntoConstraints="NO" id="GuH-TM-9hr" userLabel="viewAlertIcon">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="alertIcon" translatesAutoresizingMaskIntoConstraints="NO" id="GuH-TM-9hr" userLabel="viewAlertIcon">
                                                     <rect key="frame" x="11" y="21" width="22" height="22"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -314,7 +314,7 @@
                                             <action selector="addToList:" destination="8oS-tS-gSs" eventType="touchUpInside" id="eNb-PB-rRq"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="alterIcon" translatesAutoresizingMaskIntoConstraints="NO" id="1kj-0S-84u">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="alertIcon" translatesAutoresizingMaskIntoConstraints="NO" id="1kj-0S-84u" userLabel="alertIcon">
                                         <rect key="frame" x="303" y="21" width="28" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
@@ -409,6 +409,7 @@
                         <outlet property="addReminder" destination="193-tL-A0c" id="6Aw-oG-vsA"/>
                         <outlet property="addSubtaskTableView" destination="eJ6-s0-Nbi" id="93t-KB-j3k"/>
                         <outlet property="addTaskView" destination="RkS-rz-Jn6" id="S0H-en-zYY"/>
+                        <outlet property="calender" destination="ZqA-2g-gyN" id="1J9-eq-KmV"/>
                         <outlet property="cancelAddReminderButton" destination="7KZ-di-Avj" id="Ksq-w8-gYt"/>
                         <outlet property="completeAddReminderButton" destination="1y8-aT-35p" id="bIN-yD-Zv9"/>
                         <outlet property="mainTV" destination="UYD-wd-ajY" id="36a-Rn-PJH"/>
@@ -423,7 +424,7 @@
     </scenes>
     <resources>
         <image name="All" width="512" height="512"/>
-        <image name="alterIcon" width="128" height="128"/>
+        <image name="alertIcon" width="128" height="128"/>
         <image name="cancelAdd" width="128" height="128"/>
         <image name="finishAdd" width="128" height="128"/>
         <image name="grocery" width="512" height="512"/>

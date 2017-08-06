@@ -8,10 +8,13 @@
 
 import Foundation
 import UIKit
+import CoreData
 class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
     
-    var newSubtaskArray = [String]()
+    let DATAMANAGER = DataManager.init();
+    var newSubtaskArray = [SubTaskCoreData]()
     var hasSubtasks: Bool = false;
+    var parentTask: TaskCoreData?
     //intializer
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,7 +23,7 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         self.delegate = self
     }
     public func clearList(){
-        newSubtaskArray = [String]()
+        newSubtaskArray = [SubTaskCoreData]()
         reloadData()
     }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,20 +66,26 @@ class AddSubtaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
         if(newSubtaskArray.count <= 6 && (cellhandle.subtaskTitleField.text?.characters.count)! > 0){
             //if the chosen button is either a current element or a new value
             //new element condition
+            let newSubtaskElement = NSEntityDescription.insertNewObject(forEntityName: "SubTaskCoreData", into: DATAMANAGER.context) as! SubTaskCoreData;
             if(!cellhandle.addedToList && newSubtaskArray.count <= 5){
-                cellhandle.subtaskTitleField.isUserInteractionEnabled = false
-                cellhandle.addedToList = true
-                cellhandle.addSTButton.setImage(UIImage(named: "removeSubtaskIcon"), for: .normal)
-                newSubtaskArray.append( cellhandle.subtaskTitleField.text!)
+                cellhandle.subtaskTitleField.isUserInteractionEnabled = false;
+                cellhandle.addedToList = true;
+                newSubtaskElement.subTitle = cellhandle.subtaskTitleField.text
+                cellhandle.addSTButton.setImage(UIImage(named: "removeSubtaskIcon"), for: .normal);
+
+                newSubtaskArray.append(newSubtaskElement);
             }
             //existing element conition
             else if(cellhandle.addedToList){
                 cellhandle.addedToList = false
-                cellhandle.addSTButton.setImage(UIImage(named:"light check"), for: .normal)
-                cellhandle.subtaskTitleField.text = ""
-                cellhandle.subtaskTitleField.placeholder = "(Optional) add subtask description"
-                newSubtaskArray.remove(at: buttonRow)
-                self.deleteRows(at: [IndexPath(row: buttonRow, section: 0)], with: UITableViewRowAnimation.fade)
+                cellhandle.addSTButton.setImage(UIImage(named:"light check"), for: .normal);
+                cellhandle.subtaskTitleField.text = "";
+                cellhandle.subtaskTitleField.placeholder = "(Optional) add subtask description";
+                newSubtaskArray.remove(at: buttonRow);
+                DATAMANAGER.context.delete(newSubtaskElement);
+                
+                newSubtaskArray = DATAMANAGER.getSubTasks(parentTask: parentTask!)
+                self.deleteRows(at: [IndexPath(row: buttonRow, section: 0)], with: UITableViewRowAnimation.fade);
                 
             }
             self.reloadData()

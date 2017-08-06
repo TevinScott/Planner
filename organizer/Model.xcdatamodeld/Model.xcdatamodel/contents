@@ -2,7 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="SubTaskCoreData" representedClassName="SubTaskCoreData" parentEntity="TaskCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="subTitle" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="parentTask" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskCoreData" inverseName="subTasks" inverseEntity="TaskCoreData" syncable="YES"/>
+        <relationship name="parentTask" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskCoreData" inverseName="subtasks" inverseEntity="TaskCoreData" syncable="YES"/>
     </entity>
     <entity name="TaskCoreData" representedClassName=".TaskCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="alertDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -10,10 +10,10 @@
         <attribute name="hasSubtasks" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isExpanded" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="subTasks" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SubTaskCoreData" inverseName="parentTask" inverseEntity="SubTaskCoreData" syncable="YES"/>
+        <relationship name="subtasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubTaskCoreData" inverseName="parentTask" inverseEntity="SubTaskCoreData" syncable="YES"/>
     </entity>
     <elements>
-        <element name="SubTaskCoreData" positionX="-936" positionY="-66" width="128" height="73"/>
-        <element name="TaskCoreData" positionX="-1215" positionY="-144" width="128" height="133"/>
+        <element name="SubTaskCoreData" positionX="-974" positionY="-135" width="128" height="73"/>
+        <element name="TaskCoreData" positionX="-1215" positionY="-153" width="128" height="133"/>
     </elements>
 </model>

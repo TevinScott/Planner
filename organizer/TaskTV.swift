@@ -1,5 +1,5 @@
 //
-//  AddSubtaskVC.swift
+//  TaskVC.swift
 //  organizer
 //
 //  Created by Tevin Scott on 1/12/17.
@@ -9,55 +9,62 @@
 import Foundation
 import UIKit
 class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
-    var taskList : [Task] = [Task]()
-
-    var selectedCellIndexPath: NSIndexPath?
-    let selectedCellHeight: CGFloat = 291.0
-    let unselectedCellHeight: CGFloat = 67.0
-    var cellHeight : CGFloat = 67.0
+    var taskList : [TaskCoreData] = [TaskCoreData]();
+    var DATAMANAGER = DataManager.init()
+    var selectedCellIndexPath: NSIndexPath?;
+    let selectedCellHeight: CGFloat = 291.0;
+    let unselectedCellHeight: CGFloat = 67.0;
+    var cellHeight : CGFloat = 67.0;
     //intializer
     override func awakeFromNib() {
-        super.awakeFromNib()
-        self.dataSource = self
-        self.delegate = self
+        super.awakeFromNib();
+        self.dataSource = self;
+        self.delegate = self;
     }
-    
+   
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        var cell : TaskTVCell
-        cell = self.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTVCell
-        cell.isUserInteractionEnabled = true
-        cell.taskObj = taskList[indexPath.row]
-        if(taskList[indexPath.row].subtasks != nil && taskList[indexPath.row].hasSubtask){
-            cell.subtaskTableView.subtaskList = taskList[indexPath.row].subtasks!
+        var cell : TaskTVCell;
+        cell = self.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTVCell;
+        cell.isUserInteractionEnabled = true;
+        cell.taskObj = taskList[indexPath.row];
+        //print("total amount of cells \(indexPath.count)")
+        //print("total amount of array objects \(taskList.count)")
+        if(cell.taskObj?.hasSubtasks)!{
+            cell.subtaskTableView.parentTask = cell.taskObj;
+            cell.subtaskTableView.subtaskList = Array(cell.taskObj!.subtasks!) as! [SubTaskCoreData]
         }
-        cell.setCellElements()
-        if(cell.hasSubtasks){
-            cell.viewSubtask.tag = indexPath.row
-            cell.viewSubtask.addTarget(self, action: #selector(self.viewSubtaskButtonClicked(sender:)), for: UIControlEvents.touchUpInside)
+        if(cell.taskObj?.hasSubtasks)!{
+            cell.viewSubtask.tag = indexPath.row;
+            cell.viewSubtask.addTarget(self, action: #selector(self.viewSubtaskButtonClicked(sender:)), for: UIControlEvents.touchUpInside);
         }
-        
-        return cell
+        cell.setCellElements();
+        return cell;
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if taskList[indexPath.row].hasSubtask{
+        if taskList[indexPath.row].hasSubtasks{
             if(taskList[indexPath.row].isExpanded){
-                return selectedCellHeight
+                return selectedCellHeight;
             }
         }
-        return unselectedCellHeight
+        return unselectedCellHeight;
 
     }
     
+    /**
+    
+    */
     @available(iOS 2.0, *)
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return taskList.count
+        return taskList.count;
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.delete {
-            taskList.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+        if editingStyle == .delete {
+            
+            let taskTBD = taskList[indexPath.row]
+            DATAMANAGER.deleteTask(taskToBeDeleted: taskTBD);
+            taskList = DATAMANAGER.getData();
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic);
         }
     }
     /*
@@ -66,22 +73,21 @@ class TaskTV: UITableView, UITableViewDataSource, UITableViewDelegate {
      *otherwise removes the 
      */
     func viewSubtaskButtonClicked(sender:UIButton) {
-        print("tapped")
-        let buttonRow = sender.tag
+        let buttonRow = sender.tag;
         let cellhandle : TaskTVCell =
-        self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! TaskTVCell
+            self.cellForRow(at: IndexPath(row: buttonRow, section: 0)) as! TaskTVCell;
 
         if(!taskList[buttonRow].isExpanded && cellhandle.hasSubtasks){
-            //cellHeight = selectedCellHeight
-            taskList[buttonRow].isExpanded = true
+            //cellHeight = selectedCellHeight;
+            taskList[buttonRow].isExpanded = true;
         }
         else if (taskList[buttonRow].isExpanded && cellhandle.hasSubtasks){
-            //cellHeight = unselectedCellHeight
-            taskList[buttonRow].isExpanded = false
+            //cellHeight = unselectedCellHeight;
+            taskList[buttonRow].isExpanded = false;
         }
-        self.beginUpdates()
-        self.endUpdates()
-        self.scrollToRow(at: IndexPath(row: buttonRow, section: 0), at: .none, animated: true)
+        self.beginUpdates();
+        self.endUpdates();
+        self.scrollToRow(at: IndexPath(row: buttonRow, section: 0), at: .none, animated: true);
         //self.reloadRows(at: [IndexPath(row: buttonRow, section: 0)], with: UITableViewRowAnimation.fade)
     }
 }
